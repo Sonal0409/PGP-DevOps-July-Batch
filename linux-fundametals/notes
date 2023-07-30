@@ -1,0 +1,161 @@
+Link for the linux in class commands:
+
+https://docs.google.com/document/d/1W8HG9AGsWHBUm0cGPZwahbzuIa5JSVCUC_5NYwFB4nE/edit
+
+
+=============================================
+
+
+-rw-rw-r-- 1 ec2-user ec2-user  0 Jul 17 15:30 file1
+
+File1 : file name
+15:30 : time file was created
+Jul 17: date
+0  : no content in the file
+ec2-user: this is the group name
+ec2-user: user that created the file
+rw-rw-r-- : permissions to the file
+
+R : read
+W: write
+X: execute 
+- : no permission
+Permission of the files are given as rwx
+
+Permissions of the file are given to 3 users
+
+Current user ⇒rw-
+Group users ⇒rw-
+Other users ⇒ r - -
+
+In the beginning if you 
+
+ : that means it is a file
+    d : that means it is a directory
+
+
+Add content to an empty file 
+
+$ ls
+
+
+
+U → file owner
+G -> group users
+A -> others (everbody else)
+
+
+
+Read ⇒ 4
+Write => 2
+Execute 1
+
+
+U → file owner  ⇒ 6
+G -> group users ⇒ 4
+A -> others (everybody else) => 4
+
+
+
+
+-rw-rw-r-- 1 devopsuser devopsuser  90 Jul 30 04:32 file6
+
+
+- : its a file
+
+d: its a directory
+
+In linux any file or directory we create, access will be given to 3 types of users
+
+u : owner of the file
+g: all the users of the same group(group users)
+a: all the other users of linux OS
+
+What are the permission given to the users and how are they identified
+
+ r = READ
+ w = Write
+ x = Execute
+ - = no permission
+
+there are 3 sets of permissions on any file or directory
+
+We have 1 set of read/write/execute permission for owner of the file
+
+We have 1 set of read/write/execute permission for group users
+
+We have 1 set of read/write/execute permission for  other users of linux O
+
+rw-rw-r--
+
+rw-   : read/write/noExecute for owner of the file
+rw- : read/write/noExecute for for group users
+r--:  read/nowrite/noexecute for ther users of linux OS
+
+
+1  : single file
+
+2: no files in the directory
+
+devopsuser : owner user 
+
+devopsuser : group of the user
+
+32: size of file in bytes
+
+
+===================================
+modify permission of the file:
+===================================
+
+u: owner of the file
+g: all the users of the same group(group users)
+o:  other users of linux OS
+a: all the users of the OS
+
+What are the permission given to the users and how are they identified
+
+ r = READ (4)
+ w = Write (2)
+ x = Execute(1)
+ - = no permission (0)
+
+Command to chnage permssion of a file or directory: chmod <permission> <filename>
+
+# chmod   g+x    file6
+
+Add write permission for other users 
+
+# chmod  o+w file6
+
+Add read and write permission for owner + groupusers and other users
+
+
+# chmod 666 file6
+
+
+read only permission to owner and no permission to group user and other user
+
+
+# chmod  400 file6
+
+===========================================
+
+Process commands in Linux
+
+there are 2 commands:
+
+top command : will give all running process in your oS ==> Live current status
+
+ps command: gives snapshot/ list of all current process
+
+ps aux : shows process by all users, displays the process user/owner, shows process not attached to an app
+
+
+ps -l -u ec2-user : list all process by a user
+
+kill a process:
+
+# pkill -9 pid
+
+# pkill -u ec2-user
