@@ -1,0 +1,214 @@
+Agenda:
+==============
+
+ Git workflow 
+
+git configuration commnds
+=============================
+
+Configuration are nothing but variables to which we set some values and the tool uses them during workflows
+
+In case of git also, it provides a set of configuration variables that we will set up in order to update git log
+
+git log is nothing but--> which user did what chnage and when the chnage, what chnages were done, time
+
+when you working in a local machine--> when we commit the chnages in local repo, we cna see the name of the user that has commited the change
+
+But when we push the data form local to remote, it become important for everyone to know which has come form which user
+
+which user performed the commit
+
+
+So in local repo we have to set up 2 configurations variables:
+
+These are given to your by git, you cannot chnage there names
+
+The names of varibale are :
+
+user.name
+
+user.email
+
+The value to the variables is given by the user
+
+These configurations have 3 types of scope:
+
+> local configuration --> configuration variable will be applicable only to the current repository
+
+> global configuration --> configuration variable will be applicable to every repository created by user that is logged in the machine
+
+git config --global user.name sonal0409
+
+By executing this command, git will use sonal0409 in its log (author) for every commit done in any repository
+created by user root
+
+
+root user --> creates repo1 --> you do a commit--> check the log -->author will be sonal0409
+
+root user --> create a new WD -->creates repo2 --> you do a commit--> check the log -->author will be sonal0409
+
+root user --> reate a WD -->creates repo3 --> you do a commit--> check the log -->author will be sonal0409
+
+
+Where are these GLOBAL configuration stored?
+
+they are stored in :  ~/.gitconfig
+
+Set configurations:
+
+git config --global user.name sonal0409
+
+Edit configuration:
+
+git config --global --edit
+
+Delete configurations
+
+git config --global --unset user.name 
+
+git config --global --unset user.email
+
+====================================
+Local configuration:
+=================================
+
+Every repository you create on the machine, it will have its unique configuration
+
+
+sonal user --> creates repo1 -->I set local config(user.name sonal)
+ you do a commit--> check the log -->author will be sonal
+
+jaaya user --> create a new WD -->creates repo2 -->->I set local config(user.name jaya)
+ you do a commit--> check the log -->author will be jaya
+
+marc user --> create a new WD -->creates repo2 -->->I set local config(user.name marc)
+ you do a commit--> check the log -->author will be marc
+
+local configuration of a repository can be found in:
+
+.git/config
+
+
+what is the difference between cat .git/config va cat ~/gitconfig
+
+
+local configuration of a repository can be found in:
+
+.git/config
+
+
+Where are these GLOBAL configuration stored?
+
+they are stored in :  ~/.gitconfig
+
+=============================================
+
+System configuration:
+
+configuration applicable at OS level
+
+
+in the VM I set system config(user.name sonal0409)
+
+sonal user --> creates repo1 -->
+ you do a commit--> check the log -->author will be sonal0409
+
+jaaya user --> create a new WD -->creates repo2 -->-
+ you do a commit--> check the log -->author will be sonal0409
+
+marc user --> create a new WD -->creates repo2 
+ you do a commit--> check the log -->author will be sonal0409
+
+
+First when we create a repository-->whenever we commit --> it will check for local config(.git/config)
+
+if no local config--> then check for global conf (~/.gitconfig) --> if no global config
+
+then check for system config( /etc/gitconfig)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
