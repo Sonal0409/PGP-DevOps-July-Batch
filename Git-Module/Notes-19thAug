@@ -1,0 +1,481 @@
+Day 1 - Commands:
+**********************************
+
+Switch to user root in your terminal:
+
+#       sudo su -
+
+
+
+Command to install git :
+
+$ yum install git -y
+
+
+
+To Check the version of git installed on your server:
+
+$ git --version
+
+
+
+
+Demo 1: Execute  commands to  create a GIT Local repository
+
+Step 1: Create  a working directory using linux command
+
+$ mkdir myproject
+
+Step 2: Switch to the directory myproject
+
+$ cd myproject
+
+Step 3: Initialize git on the directory myproject by executing below command
+
+$ git init  ⇒ This command will  create a local repository
+
+Step 4: Check if local repository is created or not
+
+$ ls -al  ⇒ There will be  a .git folder, which represents your logical git Local repository.
+
+Screenshot of Entire scenario:
+
+
+
+
+Demo 2: Execute git commands to add some files into staging area and then to GIT Local repository
+==================================
+ Step 1: First create some files in working directory -> myproject
+
+Execute below commands:
+
+   $ touch index1.html
+   $ touch index2.html
+
+Step 2: Check the status of git local repository:
+
+Execute the command:
+
+   $ git status
+
+ Step 3: Now  add only 1 file to the staging area
+
+Execute the git add command as show below:
+
+$ git add index1.html
+
+
+
+ Now again see the status of files 
+
+$ git status
+
+The files will be in the staging area -> green color
+
+Sep 4: Now let's Commit the files to Local repository and check if the commit id is generated or not.
+
+$   git commit -m "added file index1.html"
+
+The above command commits all the files that are in the staging area.
+
+
+Note:
+$ git commit -m "add file only 1" filename ==> commits only this particular file to local repo
+
+Screenshot of the entire scenario:
+===============================
+
+
+
+Agenda: Day2
+
+> git configurations
+> Modify a tracked file and add the changes to local repo
+> git log
+> Delete a file from the local repository and commit the changes.
+> Revert the changes 
+
+Connect to EC2 instance 
+=========================================
+Execute command:
+=======================
+
+# sudo su -
+
+# cd myproject
+
+Demo 1: Git configurations:
+
+
+They are Variables storing values that are to be used by GIT installed in your local machine
+
+Can be set in 3 ways
+
+Set the configurations as Local, global or System
+
+Variable/configuration that you will set in git
+
+user.name
+user.email
+
+git config
+
+If you want to set the variable only to single repository , you will set configuration as local
+
+Global:
+**************
+If you want to set same user.name and same email on every repository created by the OS user that your are logged in:
+
+$ git config --global user.name Name
+
+$ git config --global user.email emialid
+
+Example:
+
+$ git config --global user.name sonal0409
+
+$ git config --global user.email mittal.sonal04@gmail.com
+
+You can find the configuration at below location
+
+# cat ~/.gitconfig
+
+Execute the command to list your configurations:
+
+#  git config --list
+
+=============================================
+
+Assignment/ Homework:
+
+Locally :
+
+$ git config --local user.name sonal0409
+
+After this if i commit in the repo, the author name will be sonal0409
+
+# cat .git/config
+
+System:
+*****************
+
+If you want to set same user.name and same email on every repository created by any OS user that your are logged in:
+
+$ git config --system user.name sonal0409
+
+$ git config --system user.email mittal.sonal04@gmail.com
+
+
+Where is git going to check the system level configuration:
+
+$ cat /etc/gitconfig
+
+> In this file the system level variable and values will be set
+
+
+Where is git going to check the global level configuration:
+
+You the find the global configuration set in the file:
+
+$ cat ~/.gitconfig
+
+If config are in file cat .git/config  → then the config are local
+
+
+Where is git going to check the local level configuration:
+
+$ cat .git/config
+
+
+Command to edit set global configuration:
+
+git config --global --edit
+
+git config --global --edit
+
+>  unsetting our configuration file using flag --unset in git config --global
+command.
+Command used: git config --global --unset user.email
+
+ git config --global --unset user.name
+
+
+=========================
+
+Scenario 2:
+*********************
+
+Take an existing file which is tracked by git
+
+make changes in the file index1.html
+
+# vim index1.html
+
+Insert some data in the file
+
+Press i
+
+Add text → write anything
+Save the file -> press ESC key →give :wq→ enter key
+
+Commit the changes to local repo:
+
+# git commit -a -m “modification”
+
+The above command will work only on modified existing tracked files
+
+The command will add the modifications and commit the chnages
+
+================================
+
+We will do changes to an existing tracked file and compare there versions
+
+Comparison between: changes that have been committed and changes not committed on that file.
+
+# vim index1.html
+
+# insert  new data
+
+Save the file (:wq)
+
+Now execute:
+
+# git diff index1.html
+
+> the above will show difference between changes that have been committed on the file and changes that are newly added
+
+========================================
+
+Discard the changes that are on the file and are present in Working directory
+
+
+# git status
+
+Modified changes will be there
+
+# git restore index1.html
+
+Now you will observe.. Changes are deleted permanently
+
+# git status ⇒ everything will be clean
+
+=======================================
+
+We will edit the file → stages the changes → bring back the changes to Working directory
+
+# git add index1.html
+
+Move the changes back
+
+# git restore --staged index1.html
+
+
+
+Scenario 3: Check the git log for details of commits
+
+*******************************
+
+To check all the commits that we have done on the local repo
+
+$ git log
+
+Will give you all commits done so far
+
+HEAD : represents the latest commit done on the repository.
+
+If you want the log to be available in a single line format
+
+$ git log --oneline
+
+Your will be in format:
+
+First 7 characters of your commit & message what you gave with commit
+
+
+To see all the changes that happened in a commit
+
+$ git log --oneline
+
+$ git show <commitid>
+
+$ git show 1376741
+
+
+
+================================
+
+Day 3:
+*********************
+Git reset command and its options
+================================
+
+ Git reset command:
+
+This command is applied on your commit history
+
+This command is used when you want to discard changes done as part of multiple commits
+
+This command will also delete your commit ids, you will not be able to see the ids
+
+Reset command with its option --hard 
+can remove changes and commit ids 
+hence it is also called as a destrcutive command
+
+Once reset command is executed it never generates a commit id or there is no log for its operation 
+
+When we use the reset command, we are resetting the HEAD of the commits
+
+git reset --hard <commitid>
+
+Other rest options that are safe to use and used frequently are:
+
+ git reset --soft <commitid>
+
+The <commitid> becomes the head and orphan commit id will be deleted fromlog and 
+files or changes will move back to staging area
+ 
+
+ git reset --mixed <commitid>
+
+
+The <commitid> becomes the head and orphan commit ids will be deleted from log and files or changes
+ will move back to Unstaged area
+ 
+
+hard->will delete permanently from WD,staging area,LR
+soft->will delete permanently from LR and files will be available in WD and staging area
+mixed->will delete permanently from LR and staging area and files will be available in WD
+
+
+Branching , Merging and rebasing
+*********************************************
+Branching is a concept in git which allows to you freely work on multiple features at the same time without impacting the main or master branch
+
+Whenever we do  commits on our repository we have seen a branch named master which gets updated.
+
+Master branch is the default branch which get created upon initializing a repo
+
+You can create any number of branches, a branch is copy of  master branch
+
+You can switch to a branch and work/develop on it.
+Once development or changes are complete on a branch , you can merge it to master branch
+
+You can also rename and delete a branch.
+
+But you cannot delete the master branch. - Golden branch
+
+
+
+
+
+
+
+
+
+
+Scenario 1:  Create branches in Local repo
+
+> Command to check how many branches are  in Local repo
+
+	…
+	git branch
+           …
+
+> Create a new branch in our Local repository
+	…
+	 git branch f1
+ 	…
+
+> Switch to a particular branch 
+       …
+       git checkout f1
+      …
+
+> Add new file and commit on the branch f1
+	$ touch feature1
+	$ git add .
+	$ git commit -m “added onf1”
+
+	$ git log –oneline  // check the new commit
+
+> Switch back to master branch and compare the 2 branches
+
+	…
+ 	git checkout master
+ 	…
+
+Assignment:
+======================
+> Compare the 2 branches:
+…
+
+git diff --name-status master..f1
+
+…
+OR
+
+git diff master..f1
+
+> List all the files of a particular branch:
+…
+ # git ls-tree <branchname>
+…
+
+Scenario 2:
+
+> Command to create a new branch as well as switch to new branch
+	…
+	 git checkout -b f2
+	…
+
+> Add new file and commit on the new branch
+
+> Switch back to master
+
+Scenario 3: Merge the changes from feature branch to master
+
+> Always switch to the branch where you want to merge the files from feature branch
+	…
+	git checkout master
+	…
+
+> Merge the changes from new branch to master branch
+	…
+	 git merge <sourcebranch> <destinationbranch>
+	…
+	
+	…
+	git merge f1 master
+	…
+> Check the commit history on master
+
+Scenario 4:
+=========================================
+Change the name of the branch
+	…
+	git branch -M f1 dev
+	…
+
+Delete a branch in local:
+
+Make sure , you are not on the branch that is to be deleted
+
+First checkout to master branch
+	…
+	 git checkout master
+	…
+
+…	
+git branch -D f2
+…
+
+List of branches that have not been merged to master
+
+git branch --no-merged
+
+List of branches that have been merged to master
+
+git branch --merged
+
+
+
