@@ -1,0 +1,1018 @@
+Day 1 - Commands:
+**********************************
+
+Switch to user root in your terminal:
+
+#       sudo su -
+
+
+
+Command to install git :
+
+$ yum install git -y
+
+
+
+To Check the version of git installed on your server:
+
+$ git --version
+
+
+
+
+Demo 1: Execute  commands to  create a GIT Local repository
+
+Step 1: Create  a working directory using linux command
+
+$ mkdir myproject
+
+Step 2: Switch to the directory myproject
+
+$ cd myproject
+
+Step 3: Initialize git on the directory myproject by executing below command
+
+$ git init  ⇒ This command will  create a local repository
+
+Step 4: Check if local repository is created or not
+
+$ ls -al  ⇒ There will be  a .git folder, which represents your logical git Local repository.
+
+Screenshot of Entire scenario:
+
+
+
+
+Demo 2: Execute git commands to add some files into staging area and then to GIT Local repository
+==================================
+ Step 1: First create some files in working directory -> myproject
+
+Execute below commands:
+
+   $ touch index1.html
+   $ touch index2.html
+
+Step 2: Check the status of git local repository:
+
+Execute the command:
+
+   $ git status
+
+ Step 3: Now  add only 1 file to the staging area
+
+Execute the git add command as show below:
+
+$ git add index1.html
+
+
+
+ Now again see the status of files 
+
+$ git status
+
+The files will be in the staging area -> green color
+
+Sep 4: Now let's Commit the files to Local repository and check if the commit id is generated or not.
+
+$   git commit -m "added file index1.html"
+
+The above command commits all the files that are in the staging area.
+
+
+Note:
+$ git commit -m "add file only 1" filename ==> commits only this particular file to local repo
+
+Screenshot of the entire scenario:
+===============================
+
+
+
+Agenda: Day2
+
+> git configurations
+> Modify a tracked file and add the changes to local repo
+> git log
+> Delete a file from the local repository and commit the changes.
+> Revert the changes 
+
+Connect to EC2 instance 
+=========================================
+Execute command:
+=======================
+
+# sudo su -
+
+# cd myproject
+
+Demo 1: Git configurations:
+
+
+They are Variables storing values that are to be used by GIT installed in your local machine
+
+Can be set in 3 ways
+
+Set the configurations as Local, global or System
+
+Variable/configuration that you will set in git
+
+user.name
+user.email
+
+git config
+
+If you want to set the variable only to single repository , you will set configuration as local
+
+Global:
+**************
+If you want to set same user.name and same email on every repository created by the OS user that your are logged in:
+
+$ git config --global user.name Name
+
+$ git config --global user.email emialid
+
+Example:
+
+$ git config --global user.name sonal0409
+
+$ git config --global user.email mittal.sonal04@gmail.com
+
+You can find the configuration at below location
+
+# cat ~/.gitconfig
+
+Execute the command to list your configurations:
+
+#  git config --list
+
+=============================================
+
+Assignment/ Homework:
+
+Locally :
+
+$ git config --local user.name sonal0409
+
+After this if i commit in the repo, the author name will be sonal0409
+
+# cat .git/config
+
+System:
+*****************
+
+If you want to set same user.name and same email on every repository created by any OS user that your are logged in:
+
+$ git config --system user.name sonal0409
+
+$ git config --system user.email mittal.sonal04@gmail.com
+
+
+Where is git going to check the system level configuration:
+
+$ cat /etc/gitconfig
+
+> In this file the system level variable and values will be set
+
+
+Where is git going to check the global level configuration:
+
+You the find the global configuration set in the file:
+
+$ cat ~/.gitconfig
+
+If config are in file cat .git/config  → then the config are local
+
+
+Where is git going to check the local level configuration:
+
+$ cat .git/config
+
+
+Command to edit set global configuration:
+
+git config --global --edit
+
+git config --global --edit
+
+>  unsetting our configuration file using flag --unset in git config --global
+command.
+Command used: git config --global --unset user.email
+
+ git config --global --unset user.name
+
+
+=========================
+
+Scenario 2:
+*********************
+
+Take an existing file which is tracked by git
+
+make changes in the file index1.html
+
+# vim index1.html
+
+Insert some data in the file
+
+Press i
+
+Add text → write anything
+Save the file -> press ESC key →give :wq→ enter key
+
+Commit the changes to local repo:
+
+# git commit -a -m “modification”
+
+The above command will work only on modified existing tracked files
+
+The command will add the modifications and commit the chnages
+
+================================
+
+We will do changes to an existing tracked file and compare there versions
+
+Comparison between: changes that have been committed and changes not committed on that file.
+
+# vim index1.html
+
+# insert  new data
+
+Save the file (:wq)
+
+Now execute:
+
+# git diff index1.html
+
+> the above will show difference between changes that have been committed on the file and changes that are newly added
+
+========================================
+
+Discard the changes that are on the file and are present in Working directory
+
+
+# git status
+
+Modified changes will be there
+
+# git restore index1.html
+
+Now you will observe.. Changes are deleted permanently
+
+# git status ⇒ everything will be clean
+
+=======================================
+
+We will edit the file → stages the changes → bring back the changes to Working directory
+
+# git add index1.html
+
+Move the changes back
+
+# git restore --staged index1.html
+
+
+
+Scenario 3: Check the git log for details of commits
+
+*******************************
+
+To check all the commits that we have done on the local repo
+
+$ git log
+
+Will give you all commits done so far
+
+HEAD : represents the latest commit done on the repository.
+
+If you want the log to be available in a single line format
+
+$ git log --oneline
+
+Your will be in format:
+
+First 7 characters of your commit & message what you gave with commit
+
+
+To see all the changes that happened in a commit
+
+$ git log --oneline
+
+$ git show <commitid>
+
+$ git show 1376741
+
+
+
+================================
+
+Day 3:
+*********************
+Git reset command and its options
+================================
+
+ Git reset command:
+
+This command is applied on your commit history
+
+This command is used when you want to discard changes done as part of multiple commits
+
+This command will also delete your commit ids, you will not be able to see the ids
+
+Reset command with its option --hard 
+can remove changes and commit ids 
+hence it is also called as a destrcutive command
+
+Once reset command is executed it never generates a commit id or there is no log for its operation 
+
+When we use the reset command, we are resetting the HEAD of the commits
+
+git reset --hard <commitid>
+
+Other rest options that are safe to use and used frequently are:
+
+ git reset --soft <commitid>
+
+The <commitid> becomes the head and orphan commit id will be deleted fromlog and 
+files or changes will move back to staging area
+ 
+
+ git reset --mixed <commitid>
+
+
+The <commitid> becomes the head and orphan commit ids will be deleted from log and files or changes
+ will move back to Unstaged area
+ 
+
+hard->will delete permanently from WD,staging area,LR
+soft->will delete permanently from LR and files will be available in WD and staging area
+mixed->will delete permanently from LR and staging area and files will be available in WD
+
+
+Branching , Merging and rebasing
+*********************************************
+Branching is a concept in git which allows to you freely work on multiple features at the same time without impacting the main or master branch
+
+Whenever we do  commits on our repository we have seen a branch named master which gets updated.
+
+Master branch is the default branch which get created upon initializing a repo
+
+You can create any number of branches, a branch is copy of  master branch
+
+You can switch to a branch and work/develop on it.
+Once development or changes are complete on a branch , you can merge it to master branch
+
+You can also rename and delete a branch.
+
+But you cannot delete the master branch. - Golden branch
+
+
+
+
+
+
+
+
+
+
+Scenario 1:  Create branches in Local repo
+
+> Command to check how many branches are  in Local repo
+
+	…
+	git branch
+           …
+
+> Create a new branch in our Local repository
+	…
+	 git branch f1
+ 	…
+
+> Switch to a particular branch 
+       …
+       git checkout f1
+      …
+
+> Add new file and commit on the branch f1
+	$ touch feature1
+	$ git add .
+	$ git commit -m “added onf1”
+
+	$ git log –oneline  // check the new commit
+
+> Switch back to master branch and compare the 2 branches
+
+	…
+ 	git checkout master
+ 	…
+
+Assignment:
+======================
+> Compare the 2 branches:
+…
+
+git diff --name-status master..f1
+
+…
+OR
+
+git diff master..f1
+
+> List all the files of a particular branch:
+…
+ # git ls-tree <branchname>
+…
+
+Scenario 2:
+
+> Command to create a new branch as well as switch to new branch
+	…
+	 git checkout -b f2
+	…
+
+> Add new file and commit on the new branch
+
+> Switch back to master
+
+Scenario 3: Merge the changes from feature branch to master
+
+> Always switch to the branch where you want to merge the files from feature branch
+	…
+	git checkout master
+	…
+
+> Merge the changes from new branch to master branch
+	…
+	 git merge <sourcebranch> <destinationbranch>
+	…
+	
+	…
+	git merge f1 master
+	…
+> Check the commit history on master
+
+Scenario 4:
+=========================================
+Change the name of the branch
+	…
+	git branch -M f1 dev
+	…
+
+Delete a branch in local:
+
+Make sure , you are not on the branch that is to be deleted
+
+First checkout to master branch
+	…
+	 git checkout master
+	…
+
+…	
+git branch -D f2
+…
+
+List of branches that have not been merged to master
+
+git branch --no-merged
+
+List of branches that have been merged to master
+
+git branch --merged
+
+
+Day 4:
+*********************
+Scenario 1: Rebasing in GIT
+**********************************
+Rebasing is merging strategy that is always applied on a feature branch
+It is never applied on Master branch
+
+In case rebase the commit history on your git repository is re-arranged on the feature branch
+
+The commit history will integrated as a patch
+ >  all the commit of master branch (base branch)
+> than all the new commits of done on feature branch
+
+Demo:
+
+> Checkout to feature branch and create 2  new commits on the feature branch
+
+> git checkout -b feature
+
+> touch file.rb
+> git add .
+> git commit  -m " new file on feature branch"
+
+Make second commit
+> touch file2.rb
+> git add .
+> git commit  -m " new file2 on feature branch"
+
+
+> Checkout to master branch and make new commits on the master branch
+
+touch file3.rb
+git add .
+ git commit -m " done on master"
+
+> We are going to switch to feature branch, on the feature I want to merge the commits of 2 branches in a linear workflow , i.e we should have all commits of master branch available and then commits of feature branch should be there
+
+$ git checkout feature
+
+$ git rebase master
+
+ we should have all commits of master branch available and then new commits of feature branch should be there
+
+*********************************************
+
+Create a Remote repositories
+
+To create account in github:
+
+https://github.com/
+
+Click on signup
+
+Given valid email address
+Give password
+Give username
+Click on continue.
+An email will be sent on your mail id
+Verify the email
+And create the account
+
+> Login to github
+
+
+Create a Personal Access token on github
+It is a authentication method which very secure
+This is used whenever we have to push files or changes from Local to remote repo
+There is no concept of using password, instead we have to use Personal access token in git locally
+
+Demo:
+
+In the main menu Go to settings of github → on the left side →scroll down to developer settings → go to Personal Access tokens →Click on tokens (classic)---> Generate New token→ select token classic
+Note→ give a name to the token
+Expiration -> 30 days
+Select scope : repo (1 checkbox) 
+Click on generate token
+
+Make sure to copy your personal access token now. You won’t be able to see it again! 
+
+> click on New button to create a remote repo
+> Name to the repository
+> select public repo
+> click on Create repository
+
+Connect Local repo to remote repo
+	Go to git and execute this command
+
+  $ git remote add origin <your remote repo Path>
+
+…
+ git remote add origin https://github.com/Sonal0409/myproject06nov.git
+…
+
+
+
+Execute the command to check local and remote repo is set:
+
+  $ git remote -v
+
+To remove local repo and remote repo connection:
+
+$ git remote rm origin
+
+Command that can be used to update existing remote origin:
+
+$ git remote set-url origin <ur>l
+
+
+Pushing the file to remote from local repo
+***************************************
+… 
+git push origin master
+…
+
+Username : <guthubusername>
+Password: give your personal access token
+
+Note: you will not be able to see the token text on screen.. Go ahead and press enter key
+
+
+Scenario: Password less authentication with GITHUB
+=======================================================
+Basically git can communicate with GITHUb over https or SSH
+
+Method1
+When git is connected to github over https, you will use
+Username and personal access token to push files in to repo by authenticating the user.
+
+
+Method 2:
+************************
+When git is connect to github over SSH
+
+Step 1:
+
+For this process on the local machine you will have to generate :
+
+SSH private key
+SSH public key
+
+The command to generate SSH key is:
+
+Come out of your repo
+
+$ cd
+$ ssh-keygen
+
+Press enter key 3 times
+
+The key will be generated and public key will be in /root/.ssh/id_rsa.pub
+
+Get the public key content
+
+$ cat /root/.ssh/id_rsa.pub
+
+You will see the public key
+
+You will then copy the public key 
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC214RqDfafQxC5m5mZYnXLDvjMdeF4RKUw/RxszJKO1hAMkyMf5lPVEu2zZ3453646YKGaxdr0ys3IqRDhJXT0NKR5e490eki9LzWTxXODd6YI5wbARacjVRx1kkjVKEvbq3CHXOs1rGCrmDaMQ2rmgHOkdHO2LSxi4p/q897RWmpzs4JoAw6wDlQk0Xn12DGJ7lfTbuiypVY7O223553vNPGoj6mk+mW4lofMejkYeC/E5Yzhnx/Yn4LvP1ptXzzg1WOLICe//PJ7QIn7lCuQa79ce+PSvWOS7auYQN+8SwNC2U+oW/ZbK1NnsPvD/IcMyjyRyFshuEeHuL+WY7wKf+QBmGUlFlQuP root@ip-172-31-22-204.us-east-2.compute.internal
+
+Go to GITHUb and paste the public key in its Settings
+
+GITHUB →Settings → leftside click on SSH & GPG keys → click on new SSh key 
+Give title of key as purduekey
+Copy the key in next box 
+Save the key
+
+By this method github now identifies you local machine as a authenticated user
+Now you don't have to give any username or personal access token while pushing files into github
+If you want to push your files over SSH, then the remote URL will be different form https
+The remote URL for the repo will be like this:
+git@github.com:Sonal0409/myproject206Aug.git
+
+Demo Example :
+
+mkdir 20Aug
+cd 20Aug
+git init
+touch file1 file2 file3
+git add .
+git commit -m "added to lR"
+
+Create a new remote repo and copy its ssh path
+
+Execute below command on local
+git remote add origin git@github.com:Sonal0409/SSHConnectionDemo.git
+
+git remote -v
+
+git push origin master
+
+It will prompt you for authentication, give yes there.
+
+Push will be complete.
+===================================================================
+
+
+Pulling file from remote github repo  to local repo
+****************************************
+
+In your git hub repo , add some new files:
+
+And commit them in github
+
+Pull those files to your local
+…
+ git pull origin master
+…
+
+Pulling a specific file form a remote repo to local
+*******************************
+Create 2 new files in github
+
+In the local git CLI
+
+Execute the command:
+…
+git fetch origin master
+…
+⇒ this command will only fetch the new changes from the remote repo and commits
+⇒ it will not merge with WD & LR
+
+This is just for your information - no need to execute below steps:
+
+How to Check what has been fetched from remote repo
+
+cd .git
+
+cat FETCH_HEAD
+
+You will a single commit with remote files information in it
+
+cd ..
+
+$  git diff 2830d1093a8f519b68c929cb4501ad1c247c9fe3
+
+This will show you, which files are not in your local, but are there in remote
+Diff ⇒ difference
+In this case, diff with commit id , will tell us what has been fetched from remote repo
+
+
+In order to merge a single file from remote to local repo
+
+Execute this:
+
+$ git checkout origin/master <filename>
+
+$  git checkout origin/master fetchfile1
+
+$ git status ⇒ file will be staged
+
+$ git commit -m “message”
+
+
+
+Fork a repo
+
+Forking is copying the remote repo from github account to another github account
+
+Copying repository remote to remote
+
+A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
+
+
+
+Cloning of remote repo to Local machine
+
+Clone → it is command in git using which we can download or copy a remote repo/branches/files to local machine
+
+Create a public repo in the github, add the readme file also
+
+This is the repo which got created:
+
+https://github.com/Sonal0409/myappDemo.git
+
+It has a branch with name as : main
+
+Add new files into the branch
+
+
+
+
+
+Process with cloning this repo on local machine using GIT CLI
+
+Execute the following command:
+
+…
+git clone <repo path>
+…
+
+…
+git clone https://github.com/Sonal0409/myappDemo.git
+…
+
+ cd myappDemo
+   ls
+   ls -al
+ git log --oneline
+ git branch
+git remote -v
+ git checkout -b products
+ ls
+ touch products
+  git status
+  git add .
+ git commit -m "done on branch products"
+ git push origin products
+
+
+
+
+
+
+
+Pull Requests in GITHUB:
+****************************
+Merging two branches in github can be done using Pull requests
+
+Click on pull request in the repo
+Click on Create pull requests
+Then select the base branch and select the compare branch
+
+
+
+
+Click on create pull request
+
+
+
+Pull request will open
+
+Click on Merge the changes
+
+Click on Confirm merge
+
+Chnages from products branch get merged to Main branch
+
+======================
+.gitignore
+======================
+
+> This concept is applicable only to files which are with status untracked file
+
+> vim .gitignore in this file we will add names/extensions/dir names that git should not track
+
+> after you save this file, git will no longer track your reuqired file
+
+
+# touch file.class file.log file.xml file.php
+
+#  git status
+
+# vim .gitignore
+
+Add the content
+
+*.php
+*.xml
+*.class
+*.log
+*.hph
+
+
+Save the file
+
+# git status
+
+Files will not be tracked now.
+
+Add and commit .gitignore file
+
+=========================
+ Stashing in GIT
+==========================
+
+Statshing is done in Local repo
+Which is applied only to the files that are tracked by git and have incomplete changes or modifications
+
+$ git ls-files
+
+Take a file that is already tracked by git
+
+Make some modifications to it
+
+$  git status
+
+Execute the stash command
+$ git stash
+
+Changes will be stashed in .git folder /refs/stash file
+
+List all stash
+
+$ git stash list
+
+Stash files using interactive mode
+
+$ git stash -p
+
+See what is saved in the stash
+
+$ git show stash@{0}
+
+
+Delete the stash and move the changes back to WD
+
+$ git stash pop stash@{0}
+
+Keep the stash and move changes back to WD
+
+$ git stash apply stash@{0}
+=====================================
+
+Scenario 3: GIT flow workflow
+======================================
+
+git-flow is an alternative branching model
+
+workflow --> creator is Vincent Driessen
+
+2 primary branches will be created automatically when you initiate git-flow
+
+main
+develop
+
+Latter user can create 3 types of branches
+
+ > features
+ > release
+ > hotfix
+
+git-flow is implemented using a tool called as gitflow
+
+Intiallation process is simple
+*************************
+$ yum update
+
+$ amazon-linux-extras install epel
+
+$ yum install gitflow
+
+…
+  mkdir purdue
+…
+  cd purdue
+…
+ git flow init
+…
+ git branch
+…
+ git flow feature start b1
+ …
+touch filenew
+…
+ git add .
+…
+ git commit -m "done on b1 branch"
+…
+ git flow feature finish b1
+…
+ git flow feature finish b1
+…
+ git branch
+…
+  git branch
+ …
+git flow release start 0.2.0
+…
+ ls
+…
+ touch release.doc
+..
+  git add .
+…
+ git commit -m "done on release"
+…
+  clear
+…
+  git flow release finish 0.2.0
+…
+
+
+ git flow hotfix start Issue1
+git flow hotfix finish Issue1
+git log --oneline
+
+
+==============================
+Tags in GIT
+*************************
+
+Light weight tags:
+
+ In this method the tag is directly appended to the latest Head commit id
+$ git tag release1
+To see all tags on the local repo:
+
+  $ git tag --list
+
+To see tag associated to commit id
+$ git log --oneline
+
+Output:
+
+d3e9a9d (HEAD -> feature, tag: release1) modified new file on fetaure branch
+db50ea3 modified new file on fetaure branch
+a29fafc done
+e54ddb6 done
+0e6bac9 done on feature branch
+
+
+
+ Annotated tags:
+**********************************
+
+We can create our tag first and attach it to any specific commit
+	
+$ git tag -a v1.1 -m “july release” <unique commitid>
+
+$ git tag --list
+
+$ git show <tagname>
+
+Assignment:
+****************************
+Push the tags to local to remote repository
+
+$ git push origin <tagname>
+
+Push all the tags to remote
+
+$ git push origin --tags
+
+Delete tag from remote repo using git command
+
+$ git push --delete origin tagname
