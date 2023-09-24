@@ -593,6 +593,13 @@ pipeline{
         // what tool version to use for build stages
         maven 'mymaven'
     }
+
+triggers {
+
+// cron(* * * * *)
+pollscm('* * * * *')
+
+}
     
     agent any
     
