@@ -1,0 +1,249 @@
+
+Configuration Management with Ansible
+======================================
+
+Infrastructure: -> Provisioning
+=================
+> network, subnet, internet gateways, firewalls
+> creation of servers, Ec2 servers
+> Load balancers
+> DB servers
+> storage
+> Cloud credentials
+
+> Infrastructure Provisioning: Creation of infrastructure on the cloud Providers
+
+Configuration: -> Management
+====================
+
+> install software/unstalling/upgrading Package
+
+> Creation groups/users, permissions
+
+> Directories, files, copying files
+
+> runnign script, making any chnages to a server or many servers
+
+> deploying an application
+
+> start an application/stop an application
+
+Configuration Management : Taking the exisitng infrastructure and making changes in it to bring consisitency across all the servers
+
+
+In realtime, we also have many envrionment: dev, test, prod
+
+ -> different types of configurations
+ -> manually managing and making chnages on all those servers will be diffcult
+ -> we will write scripts for each env will maintain it seperatly
+
+Features of CM tools:
+================================
+
+- Manage software configurations on various servers effectively
+
+- Less manual erorrs while doing the configuration settings
+
+- Bring consistency across various environments 
+
+- Version Control the CM code
+
+- Deploy app code
+==================================
+
+Some of the Important CM tools are:
+==================================
+
+Pull approach
+=================
+> Puppet
+> Chef
+
+Push Approch
+==================
+> Ansible  -> open sources
+> Saltstalk -> paid, enterprise
+
+=========================================
+
+Ansible Architecture:
+
+
+Inventory:
+===================================
+Inventory in ansible is a file in which you will list down the IP address or hostnames of the host servers where we have to do configuration changes.
+Ansible always checks the host details in the inventory before connecting to the desired server for changes.
+Inventory file is a simple text file. It has no extension
+This file is given to you by Ansible and is present at location /etc/ansible
+The name of this file is "hosts" file
+However you can create your own inventory file in any location
+There are 2 types of inventory file:
+> Static inventory -> user maintained
+> Dynamic inventory -> ansible creates and maintains the inventory file
+
+
+Modules:
+=====================================
+Are small-small python code, already written in Ansible and is given to the admin
+These modules come with logic to do changes on the servers
+4000+ modules
+Example:
+====================
+
+Module : copy(src=/opt/filesonal dest=/opt)
+
+Every module will need paramters from the admin, to determine the desired state of configuration on the server
+
+Ansible Configuration File:
+===================================
+
+This file will be available by default in ansible .
+
+The file name is ansible.cfg, the default location is : /etc/ansible
+
+This file consists of Ansible related varibales describing more details about ansible
+
+It consists of 2 types of parameters:
+
+> defaults
+> privilege
+
+List of modules for linux are different from windows
+
+==================================
+Playbook
+===================================
+
+Ansible code is written in Playbooks
+Playbooks are written in YAML
+Playbooks consist of 2 sections:
+  - hosts
+      - the group of host servers where chnages have to be done
+  - tasks
+      - the list of modules that will apply changes on the group of the hosts. 
+
+As an admin, you will just write the playbook.
+Once you execute the playbook using ansible
+  -> if the playbook has to make changes on a Linux host server-> it will will convert the playbook into a python code and execute it on linux host
+ -> if the playbook has to make changes on a Windows host server-> it will will convert the playbook into a powershell script and execute it on windows host
+
+
+=============================================
+
+
+Step 1: Create an ec2 machine which will Controller machine
+
+$ sudo amazon-linux-extras install epel
+
+$ yum install ansible -y
+
+$ ansible --version
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
