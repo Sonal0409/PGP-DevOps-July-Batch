@@ -1,0 +1,558 @@
+
+What is a playbook? How to write a playbook
+How write YAML code
+Write a Ansible playbook to deploy war file on tomcat
+Write a Ansible playbook to deploy html code file on apache server
+Handlers in ansible
+
+Playbooks:
+Demo 1: Deployment of war file on tomcat using Ansible
+
+Connect to you Ansible controller machine
+
+Make sure you are ec2-user user
+
+Go to ansible directory
+
+$ /etc/ansible
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Create a playbook:
+
+$ sudo vim tomcatdemo.yml
+
+---
+
+- hosts: webserver
+  become: true
+  become_user: root
+  # these tasks will be exeucted as root
+  tasks:
+  - name: Install tomcat package on host server
+    yum: name=tomcat state=present
+  - name: Start a tomcat service in host server
+    service: name=tomcat state=started
+  - name: Deploy the war file on tomcat webapps directory
+    get_url:
+     url=https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+     dest=/usr/share/tomcat/webapps
+  - name: Restart tomcat
+    service: name=tomcat state=restarted
+
+
+
+
+
+
+
+Demo 2: Execute a shell command using ansible playbook 
+
+save the output of the command  in a variable
+
+And then print the variable value
+
+
+REGISTER MODULE
+You can also register the value of a variable, i.e. store the output of a variable
+Using register module
+ 
+Example:
+In below playbook, command is executed but you will not see the output at runtime:
+ 
+---
+- hosts: webserver
+   become: true
+   become_user: root
+   gather_facts: false
+   tasks:
+   - name: display bash version
+ 	shell: "bash --version"
+ 
+:wq!
+ 
+So we need to use register module to store the output in a variable
+---
+- hosts: webserver
+   become: true
+   become_user: root
+   gather_facts: false
+   tasks:
+   - name: display bash version
+ 	shell: "bash --version"
+ 	register: bash_version       	
+   - name: print the variable value
+ 	debug:
+  	var: bash_version
+ 
+this will return value of variable as maps==> keys & values
+this will return lots of data
+lets add some python scripting to filter the data and fetch only stdout value
+fetch the value of stdout key in the variable and fetch the value at 0th index
+here bash_version is a variable
+ 
+ 
+---
+- hosts: webserver
+   become: true
+   become_user: root
+   gather_facts: false
+   tasks:
+   - name: display bash version
+ 	shell: "bash --version"
+ 	register: bash_version          	
+   - name: print the variable value
+ 	debug:
+  	var: bash_version.stdout
+
+
+
+=======================================
+
+
+
+
+---
+
+- name: debug module in Ansible will print a message or varibale value for user
+  hosts: webserver
+  become: true
+  become_user: root
+  tasks:
+  - name: print a message
+    debug: msg="Hello from Ansible Controller"
+  - name: Execute a command on hostserver
+    command: hostname -s
+    # register will store the output of the above command execution in a variable
+    register: command_ouput   # this is variable name given by user, ansible will create variable and store the output
+  - name: display the output of command
+    debug: var=command_ouput.stdout
+
+
+
+
+Custom ansible.cfg file:
+=======================
+Create your own ansible.cfg file we will write parameters
+
+[defualts]
+inventory= ./myinventory
+remote_user= labsuser
+ask_pass=true
+host_key_checking=false
+forks=2
+[privilege_escalation]
+become=true
+become_user=root
+==========================
+
+
+ 
+
+
+
+
+Deployment of index.html file on Apache using ansible
+# sudo vim apacheplaybook.yml
+
+- hosts: webserver
+  become: true
+  tasks:
+  - name: install apache on host server
+    yum: name=httpd state=present
+  - name: start apache service
+    service: name=httpd state=started
+  - name: copy file on apache server
+    copy: src=/etc/ansible/index.html dest=/var/www/html/
+ -  name: Restart apache service
+    service: name=httpd state=restarted
+
+
+In the directory /etc/ansible create the code index.html file:
+
+# cat index.html
+
+<h1> this file is form Ansible Controller </h1>
+<h1> Sonal Mittal </h1>
+
+:wq!
+
+
+Execute the playbook:
+
+# ansible-playbook apacheplaybook.yml --syntax-check
+
+# ansible-playbook apacheplaybook.yml 
+
+
+
+
+
+
+
+
+
+
+
+Custom Variables in Ansible:
+> Vars block
+> Vars_prompt block
+> Vars_files block
+> Variables at runtime
+Handlers block in Ansible
+
+
+Variables:
+*************************
+
+A variables in Ansible is just like any variable that you define in a programming language
+A variable will store a value/data
+Variable are used in order to make your playbook more robust & reusable.
+
+There are 3 types of variables in Ansible
+
+Special variables: these variables are pre-defined in ansible and any user cannot change the name or the value of the variable
+Fact variables: these are also ansible variables in which ansible will store data about host machines
+For these kind of variable, we cannot define the value it comes from ansible only
+You can directly use these variables in ansible playbooks or adhoc commands
+
+Custom Variables:
+These are the most commonly used type of variables in ansible
+These variables are declared by the user and values are also declared by the user itself
+
+            Any variable you will write in ansible will be in the following format:
+  	
+	varName: value
+
+          But following points have be kept in mind while giving name to the variable:
+
+ 	> No custom variable will have name as ansible or ansible keywords or python keywords
+	> Ansible custom variables can include letters , numbers and underscore
+ 	> variables used in a playbook should have unique name
+
+For eg your variable names can be:
+
+	Color: red
+            VAR1: true
+       name_user: sonal
+       _var123: 456
+
+This kind of format will be incorrect:
+
+  $var1: 23 ⇒ this is incorrect variable name
+ ansible: true
+
+Once a variable and its value is declared, you can refer to the variable in the playbook tasks sections in following format
+
+{{color}}
+
+For eg: 
+
+color: yellow
+
+print the value of the variable {{color}}
+
+Output will be  : yellow
+
+
+A variable can have a list of values:
+
+For eg:
+
+color:
+Red     
+Blue   
+Green 
+Black  
+
+Task: print the variable value as green
+
+We will refer the variable which has multiple values:
+
+  {{color[2]}}
+
+Output: green
+
+
+
+
+
+
+
+Demo1: Create the vars block and declare the variable and its value inside the playbook itself
+Use this variable and refer it in the tasks block
+
+sudo vim varibaledemo.yml
+
+
+---
+
+- hosts: webserver
+  become: true
+  become_user: root
+  vars:
+   pkg_name: httpd
+  tasks:
+  - name: Install {{pkg_name}} package on host server
+    yum: name={{pkg_name}} state=present
+  - name: Start a {{pkg_name}} service in host server
+    service: name={{pkg_name}} state=started
+
+
+
+
+
+
+Demo2:
+If we have a variable and its value already declared in playbook under vars section ,
+ but we want pass a new value to the same variable at runtime(when executing the playbook)
+
+sudo vim variabledemo2.yml
+
+---
+
+- hosts: webserver
+  become: true
+  vars:
+   path_name: /tmp/vardemo2.txt
+  tasks:
+  - name: Create a empty file on the host server
+    file: path={{path_name}} state=touch
+
+
+This time we will pass an extra value to the variable at runtime
+
+Execute below command:
+ansible-playbook variabledemo2.yml --extra-vars '{"path_name":"/tmp/vardemo4.txt"}'
+
+
+
+
+Assignment:
+==================
+Demo 3: Prompt the user to enter the value to a variable at runtime: vars_prompt block
+
+ sudo vim variabledemo3.yml
+
+---
+
+- hosts: webserver
+  become: true
+  become_user: root
+  vars_prompt:
+  - name: pkg_name
+    prompt: Enter your package name.
+    private: false
+  - name: pkg_state
+    prompt: enter the state of package
+    private: false
+  tasks:
+  - name: Install {{pkg_name}} package on host server
+    yum: name={{pkg_name}} state={{pkg_state}}
+  - name: Start a {{pkg_name}} service in host server
+    service: name={{pkg_name}} state=started
+
+
+
+
+Demo 4:
+
+Ansible variables and values can be defined in a separate YAML file, we can then refer to the variables in playbook tasks using the block vars_files
+
+
+
+
+Sudo vim myvariables.yml
+
+
+pkg_name:
+ - tomcat
+ - docker
+ - httpd
+
+pkg_state:
+ - present
+ - absent
+ - latest
+
+Now call the variables in the playbook:
+sudo vim variabledemo3.yml
+
+---
+
+- hosts: webserver
+  become: true
+  become_user: root
+  vars_files:
+  - myvariables.yml
+  vars_prompt:
+  - name: index_value
+    prompt: Enter the index value
+    private: false
+  tasks:
+  - name: Install {{pkg_name[0]}} package on host server
+    yum: name={{pkg_name[0]}} state={{pkg_state[0]}}
+  - name: Start a {{pkg_name[0]}} service in host server
+    service: name={{pkg_name[0]}} state=started
+
+
+
+
+
+Ansible Fact variables:
+*******************************
+
+Execute command to see ansible fact variables:
+
+# ansible webserver -m setup
+
+The setup module gathers facts about all its hosts that are part of the group webserver and displays the values in the form of variables. These variables are called Fact variables.
+The name of these variables start with ansible.
+These variables are directly used in the ansible playbook.
+Values of these variables are pre-defined by hosts and cannot be altered by the user.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Example:
+
+ playbook to find Hostname and OSname of the hosts without using fact variables:
+
+ - name: Finding os distribution and os name
+   hosts: webserver
+   gather_facts: false
+   tasks:
+   - name: FInding os distribution
+     shell: "cat /etc/os-release  | awk -F =  'NR==1 {print $2 }' | awk '{print $1}' | tr '\"' ' '"
+     register: os_dist
+   - name: Finding os name
+     shell: "uname"
+     register: os_name
+   - debug:
+      msg:
+       - "The os distribution name is: {{os_dist.stdout}}"
+       - "THe os name: {{os_name.stdout}}"
+
+
+
+
+
+
+
+
+
+
+Ansible playbook using ansible fact variables and debug module:
+
+
+- hosts : webserver
+  tasks:
+  - name: Find OS distribution, name and OS family
+    debug:
+     msg:
+      - " The Os distribution of the host is : {{ansible_distribution}}"
+      - " the OS name of the hosts is : {{ansible_system}}"
+      - " the OS family of the hosts is : {{ansible_os_family}}"
+
+
+
+
+
+Output:
+
+
+
+
+Use of Ansible Fact variables with When keyword (Conditions)
+
+Playbook:
+---
+- hosts: webserver
+  gather_facts: true
+  become: yes
+  tasks:
+  - name: Installing httpd using yum
+    yum: name=httpd state=present
+    when: ansible_distribution != "Ubuntu"
+  - name: Installing apache2 using apt
+    apt: name=apache2 state=present
+    when: ansible_distribution == "Ubuntu"
+
+
+
+
+Output:
+
+
+
+
+When keyword Demo:
+
+- name: When condition in Ansible
+  hosts: webserver
+  become: true
+  become_user: root
+  tasks:
+  - name: install git on hostserver
+    package: name=git state=present
+    when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "20") or
+          (ansible_distribution == "Amazon" and ansible_distribution_major_version == "2") or
+          (ansible_distribution == "Centos" and ansible_distribution_major_version == "7")
+  - name: start service
+    service: name=httpd state=started
+
+
+
+Assignment: 
+
+Explore variables, when condition and stat module of ansible
+
+When condition, register & variables
+
+
+- hosts: webserver
+  tasks:
+   - name: Check if mydir directory is present
+     stat:
+      path: /tmp/mydir
+     register: results
+   - name: display results of stat module
+     debug:
+      var: results
+   - name: Create directory if mydir is not present
+     file:
+      name: /tmp/mydir
+      state: directory
+     when:
+      results.stat.exists == false
+   - name: list the files in tmp directory
+     command: ls -al /tmp
+     register: list_dir
+   - name: print variable list_dir
+     debug:
+      var: list_dir
