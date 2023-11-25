@@ -1,0 +1,499 @@
+Terraform notes 
+
+******************************************
+
+Installation of terraform on Amazon linux 2 platform
+
+
+
+sudo yum install -y yum-utils shadow-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
+==============================================
+
+OR
+
+Install using terraform binary file
+
+#  wget https://releases.hashicorp.com/terraform/1.3.7/terraform_1.3.7_linux_amd64.zip
+
+# ls
+
+We have got the terraform zip file, now unzip it
+
+# unzip terraform_1.3.7_linux_amd64.zip
+
+# mv terraform /usr/local/bin
+
+OR
+
+# mv terraform /usr/bin
+
+
+Execute the command
+# terraform
+
+The installation is now complete
+
+************************************************
+
+Our provider : AWS
+
+Terraform should be able to communicate with AWS securely
+For this, we need to create a IAM user and credentials in AWS
+Credentials of type : accesskey and secret key
+We will then pass these credentials to terraform in order to connect and create configuration
+
+
+
+Go to AWS → search for IAM
+
+IAM  → select Users → add user → give a name (terraform)-->press next →Select  Attach policies directly →scroll down and select AdministratorAccess →press next and create a user
+
+
+Create credentials for user
+
+
+Click on the user name (terraform)-->Click on Security Credentials → scroll to select access key
+→ click on create access key→ select Command Line Interface (CLI)
+Select → I understand the above recommendation and want to proceed to create an access key.
+
+
+
+Make sure you copy the accesskey and secret key
+
+
+
+Let us now write terraform configuration files, using which we will create resources on AWS automatically.
+
+
+Create a directory:
+
+# mkdir myterraformfile
+# cd myterraformfile
+
+# vim awsprovider.tf
+
+provider "aws" {
+  region     = "us-west-2"
+  access_key = "AK453fdIAQN2UCWBGTCDCUDC345345564364622NP7S"
+  secret_key = "5+3536364565dgdfgdfyrtyr/0"
+}
+
+
+Download the aws provider plugin
+
+# terraform init
+
+==================================================
+
+# vim awsprovider.tf
+
+Add the resource block
+
+
+resource "aws_instance" "myec2" {
+  ami           = "ami-0d593311db5abb72b"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Terraform1"
+  }
+}
+
+
+Save the file
+
+#  terraform plan
+
+# terraform apply
+
+Give yes 
+
+Resource will be created
+
+
+Demo 2:
+
+We will take the same configuration file:
+
+
+Step 1: Create resource ec2 instance
+
+
+
+Step 2: create an elastic ip - static ip
+
+Step 3: associate elastic ip on the ec2 instance
+
+provider "aws" {
+  region     = "us-west-2"
+  access_key = 
+  secret_key = 
+}
+
+
+resource "aws_instance" "myec2" {
+  ami           = "ami-0d593311db5abb72b"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Terraform1"
+  }
+
+}
+
+resource "aws_eip" "myeip" {
+  vpc      = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.myec2.id
+  allocation_id = aws_eip.myeip.id
+}
+
+
+
+
+
+
+
+Variables in Terraform and Variable block:
+
+
+provider "aws" {
+  region     = "us-west-2"
+  access_key = 
+  secret_key = 
+}
+
+
+resource "aws_instance" "myec2" {
+  ami           = "ami-0d593311db5abb72b"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Terraform1"
+  }
+
+}
+
+resource "aws_eip" "myeip" {
+  vpc      = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.myec2.id
+  allocation_id = aws_eip.myeip.id
+}
+
+ # vim variables.tf
+
+variable "access_key" {
+
+default = "AKIAQN2UCW3535BUDC22NP7S"
+
+}
+
+variable "secret_key" {
+
+default = "5+hwRqam8G0zys455345rwertrertZOTW7WaaRRyv8lT1Ha1vwkbD/0"
+
+}
+
+variable "ami" {
+
+ default = "ami-0d593311db5abb72b"
+
+}
+
+variable "instance_type" {
+ default = "t2.micro"
+}
+
+New TF file will be 👍
+
+provider "aws" {
+  region     = "us-west-2"
+  access_key = var.access_key
+  secret_key = var.secret_key
+}
+
+
+resource "aws_instance" "myec2" {
+  ami           = var.ami
+  instance_type = var.instance_type
+
+  tags = {
+    Name = "Terraform1"
+  }
+
+}
+
+resource "aws_eip" "myeip" {
+  vpc      = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.myec2.id
+  allocation_id = aws_eip.myeip.id
+}
+
+Data Block:
+===============
+
+provider "aws" {
+  region     = "us-west-2"
+  access_key = var.access_key
+  secret_key = var.secret_key
+}
+
+
+data "aws_ami" "my-ami" {
+
+  most_recent      = true
+  owners           = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn-ami-hvm*"]
+  }
+
+}
+
+resource "aws_instance" "myec2" {
+  ami           = data.aws_ami.my-ami.id
+  instance_type = var.instance_type
+
+  tags = {
+    Name = "terraform-instance"
+  }
+
+
+}
+
+
+
+
+
+
+
+CONDITIONS in TERRAFORM ⇒ 
+*************************
+Condition == true ? then perform an action : else perform another action
+
+
+
+variable "istest" {
+default = false
+
+
+}
+
+resource "aws_instance" "testenv" {
+  ami           = var.ami
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Terraform1234"
+  }
+
+    count =var.istest == true ? 1 : 0
+    }
+
+
+resource "aws_instance" "prodenv" {
+  ami           = var.ami
+  instance_type = "t2.large"
+
+  tags = {
+    Name = "Terraform1345"
+  }
+
+    count =var.istest == false ? 1 : 0
+    }
+
+Dynamic Block in terraform:
+*************************************
+
+variable "sg_ports" {
+
+
+
+
+ type        = list(number)
+
+
+ description = "list of ingress ports"
+
+
+ default     = [8200, 8201,8300, 9200, 9500]
+
+
+}
+
+
+
+
+
+
+
+resource "aws_security_group" "dynamicsg" {
+
+
+ name        = "dynamic-sg"
+
+
+ description = "Ingress for Vault"
+
+
+
+
+
+
+
+ dynamic "ingress" {
+
+
+   for_each = var.sg_ports
+
+
+   iterator = port
+
+
+   content {
+
+
+     from_port   = port.value
+
+
+     to_port     = port.value
+
+
+     protocol    = "tcp"
+
+
+     cidr_blocks = ["0.0.0.0/0"]
+
+
+   }
+
+
+ }
+
+
+
+
+
+
+
+ dynamic "egress" {
+
+
+   for_each = var.sg_ports
+
+
+   content {
+
+
+     from_port   = egress.value
+
+
+     to_port     = egress.value
+
+
+     protocol    = "tcp"
+
+
+     cidr_blocks = ["0.0.0.0/0"]
+
+
+   }
+
+
+ }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Demo for multiple instance in different availability zones:
+
+Create  a variable file as given below:
+ cat variables.tf
+variable "ami" {
+default = "ami-06e85d4c3149db26a"
+}
+variable "instance_type" {
+default = "t2.micro"
+}
+variable "environment" {
+default = "dev"
+}
+variable "availability_zone" {
+type = list
+default = ["us-west-1","us-west-2"]
+}
+=====================================
+
+Now update the terraform configuration file:
+
+cat awsprovider.tf
+
+# first block in terraform is going to be provider block
+
+# You must configure the provider with the proper credentials before you can use it
+
+
+provider "aws" {
+  region     = "us-west-2"
+  shared_credentials_files = ["~/.aws/credentials"]
+}
+
+
+resource "aws_instance" "web" {
+  ami           = var.ami
+  instance_type = var.instance_type
+  count = 3
+  availability_zone = element(var.availability_zone,count.index)
+  tags = {
+    Name = "${var.environment}-${count.index}"
+  }
+}
+====================================================================
+Entire scenario of setting up AWS infrastructure and connecting to instance using remote-exec provisioner.
+
+https://github.com/Sonal0409/terraformLabs/blob/master/AWS_infra_setup.tf
+
+=============== THE END ========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
